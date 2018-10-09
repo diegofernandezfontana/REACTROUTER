@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import Albums from '../components/Albums';
 import Artists from '../components/Artists';
+import Artist from '../components/Artist';
 import SingleAlbum from '../components/SingleAlbum';
 import audio from '../audio';
 
@@ -107,7 +108,6 @@ export default class Main extends React.Component {
 
   render() {
     const  { albums, selectedAlbum, selectedSong, isPlaying, progress } = this.state;
-    console.log(this.state.artists);
     return (
       <div id="main" className="container-fluid">
         <Sidebar deselectAlbum={this.deselectAlbum} />
@@ -116,6 +116,7 @@ export default class Main extends React.Component {
             <Redirect exact from="/" to="/albums" />
             <Route path="/albums/:id" render={({match}) => <SingleAlbum albumId={match.params.id} selectAlbum={this.selectAlbum} selectedSong={selectedSong} start={this.start} album={selectedAlbum}/> } />
             <Route path="/albums" exact render={()=> <Albums albums={albums} selectAlbum={this.selectAlbum} /> } />
+            <Route path="/artist/:id" exact render={()=> <Artist artist={this.state.artist}/> } />
             <Route path="/artists" exact render={()=> <Artists artists={this.state.artists}/> } />
         </Switch>
         </div>

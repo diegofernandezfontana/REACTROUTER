@@ -2,7 +2,8 @@ import React from 'react';
 
 class Artist extends React.Component {
 
-    render(){(
+    render(){
+        return(
         <div>
             <h3>ARTIST NAME</h3>
             <h4>ALBUMS</h4>
