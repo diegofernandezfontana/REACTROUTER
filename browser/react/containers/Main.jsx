@@ -6,6 +6,9 @@ import Albums from '../components/Albums';
 import SingleAlbum from '../components/SingleAlbum';
 import audio from '../audio';
 
+import { Route, Redirect, Switch} from 'react-router-dom';
+
+
 export default class Main extends React.Component {
   constructor(){
     super();
@@ -25,7 +28,7 @@ export default class Main extends React.Component {
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
   }
-  
+
   componentDidMount() {
     axios.get('/api/albums')
       .then(res => res.data)
@@ -39,7 +42,7 @@ export default class Main extends React.Component {
       });
     });
   }
-  
+
   selectAlbum(albumId) {
     axios.get(`/api/albums/${albumId}`)
       .then(res => res.data)
@@ -70,7 +73,7 @@ export default class Main extends React.Component {
     audio.pause();
     this.setState({ isPlaying: false })
   }
-  
+
   findSongIndex() {
     return this.state.currentSongList.findIndex(song => song.id === this.state.selectedSong.id);
   }
@@ -78,7 +81,7 @@ export default class Main extends React.Component {
   next() {
     let index = this.findSongIndex() + 1;
     if (index >= this.state.currentSongList.length) {
-      index = 0 
+      index = 0
     }
     const song = this.state.currentSongList[index];
     this.setState({ selectedSong: song })
@@ -88,7 +91,7 @@ export default class Main extends React.Component {
   previous() {
     let index = this.findSongIndex() - 1;
     if (index < 0) {
-      index = this.state.currentSongList.length - 1 
+      index = this.state.currentSongList.length - 1
     }
     const song = this.state.currentSongLists[index];
     this.setState({ selectedSong: song })
@@ -101,16 +104,16 @@ export default class Main extends React.Component {
       <div id="main" className="container-fluid">
         <Sidebar deselectAlbum={this.deselectAlbum} />
         <div className="col-xs-10">
-          {!selectedAlbum.id ?
-            <Albums albums={albums} selectAlbum={this.selectAlbum} />
-            :
-            <SingleAlbum selectedSong={selectedSong} start={this.start} album={selectedAlbum} />
-          }
+        <Switch>
+            <Redirect exact from="/" to="/albums" />
+            <Route path="/albums/:id" render={({match}) => <SingleAlbum albumId={match.params.id} selectAlbum={this.selectAlbum} selectedSong={selectedSong} start={this.start} album={selectedAlbum}/> } />
+            <Route path="/albums" exact render={()=> <Albums albums={albums} selectAlbum={this.selectAlbum} /> } />
+        </Switch>
         </div>
-        <Footer 
+        <Footer
           selectedSong={selectedSong}
-          isPlaying={isPlaying} 
-          play={this.play} 
+          isPlaying={isPlaying}
+          play={this.play}
           pause={this.pause}
           next={this.next}
           previous={this.previous}
